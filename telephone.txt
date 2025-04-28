@@ -1,0 +1,111 @@
+class TelephoneBook:
+    def __init__(self, name, tel_no):
+        self.name = name
+        self.tel_no = tel_no
+
+def insertion_quadratic_probing():
+    hashtable = [None] * 10
+    num_records = int(input("\nEnter number of records: "))
+    for _ in range(num_records):
+        n = input("Enter name: ")
+        t = int(input("Enter telephone no.: "))
+        hashValue = t % 10
+        i = 1
+        while hashtable[hashValue] is not None:
+            hashValue = (hashValue + i * i) % 10
+            i += 1
+        hashtable[hashValue] = TelephoneBook(n, t)
+    return hashtable
+
+def insertion_double_hashing():
+    hashtable = [None] * 10
+    num_records = int(input("\nEnter number of records: "))
+    for _ in range(num_records):
+        n = input("Enter name: ")
+        t = int(input("Enter telephone no.: "))
+        h1 = t % 10
+        h2 = 7 - (t % 7)
+        hashValue = h1
+        i = 1
+        while hashtable[hashValue] is not None:
+            hashValue = (h1 + i * h2) % 10
+            i += 1
+        hashtable[hashValue] = TelephoneBook(n, t)
+    return hashtable
+
+def display(hashtable):
+    print("-------------------------------")
+    print("Index\tName\tTelephone No.")
+    print("-------------------------------")
+    for idx, obj in enumerate(hashtable):
+        if obj is None:
+            print(f"{idx}\t-\t-")
+        else:
+            print(f"{idx}\t{obj.name}\t{obj.tel_no}")
+    print("-------------------------------")
+
+def search(hashtable, name):
+    comparisons = 0
+    for obj in hashtable:
+        comparisons += 1
+        if obj is not None and obj.name == name:
+            return True, comparisons
+    return False, comparisons
+
+def main():
+    hash_qp = [None] * 10
+    hash_dh = [None] * 10
+
+    while True:
+        print("\n-------------------------------")
+        print("\t1. Insert")
+        print("\t2. Display")
+        print("\t3. Search and Compare")
+        print("\t4. Exit")
+        print("-------------------------------")
+        choice = int(input("Enter choice: "))
+
+        if choice == 1:
+            print("\nSelect collision method-")
+            print("\t1. Quadratic Probing")
+            print("\t2. Double Hashing")
+            method = int(input("Enter choice: "))
+            if method == 1:
+                hash_qp = insertion_quadratic_probing()
+            elif method == 2:
+                hash_dh = insertion_double_hashing()
+            else:
+                print("Invalid method.")
+
+        elif choice == 2:
+            print("\nSelect table to display-")
+            print("\t1. Quadratic Probing Table")
+            print("\t2. Double Hashing Table")
+            method = int(input("Enter choice: "))
+            if method == 1:
+                display(hash_qp)
+            elif method == 2:
+                display(hash_dh)
+
+        elif choice == 3:
+            name = input("Enter name to search: ")
+            found_qp, comp_qp = search(hash_qp, name)
+            found_dh, comp_dh = search(hash_dh, name)
+
+            if found_qp:
+                print(f"\nFound in Quadratic Probing in {comp_qp} comparisons.")
+            else:
+                print(f"\nNot found in Quadratic Probing ({comp_qp} comparisons).")
+
+            if found_dh:
+                print(f"Found in Double Hashing in {comp_dh} comparisons.")
+            else:
+                print(f"Not found in Double Hashing ({comp_dh} comparisons).")
+
+        elif choice == 4:
+            break
+        else:
+            print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()

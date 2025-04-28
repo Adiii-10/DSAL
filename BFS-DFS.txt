@@ -1,0 +1,69 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+int adjMat[10][10], row, col, edge, numVerts, queue[10], front = 0, rear = 0, start, visited[10], visiting[10];
+int stack[10], topVal = -1, visited1[10], visiting1[10];
+
+int main() {
+    cout << "Enter number of vertices: ";
+    cin >> numVerts;
+    cout << "Enter number of edges: ";
+    cin >> edge;
+
+    cout << "\nEDGES:\n";
+    for (int i = 1; i <= edge; i++) {
+        cin >> row >> col;
+        adjMat[row][col] = 1;
+        adjMat[col][row] = 1;
+    }
+
+    cout << "The adjacency matrix of the graph is:\n";
+    for (row = 0; row < numVerts; row++) {
+        for (col = 0; col < numVerts; col++) {
+            cout << " " << adjMat[row][col];
+        }
+        cout << endl;
+    }
+
+    cout << "Enter starting vertex for BFS: ";
+    cin >> start;
+    cout << "The BFS of the Graph is\n";
+    cout << start << " ";
+    visited[start] = 1;
+    queue[rear++] = start;
+
+    while (front != rear) {
+        start = queue[front++];
+        for (col = 0; col < numVerts; col++) {
+            if (adjMat[start][col] != 0 && !visited[col]) {
+                visited[col] = 1;
+                queue[rear++] = col;
+                cout << col << " ";
+            }
+        }
+    }
+    cout << endl;
+
+    cout << "Enter starting vertex for DFS: ";
+    cin >> start;
+    cout << "The DFS of the Graph is\n";
+    cout << start << " ";
+    visited1[start] = 1;
+    stack[++topVal] = start;
+
+    while (topVal != -1) {
+        start = stack[topVal--];
+        for (col = numVerts - 1; col >= 0; col--) {
+            if (adjMat[start][col] != 0 && !visited1[col]) {
+                visited1[col] = 1;
+                stack[++topVal] = col;
+                cout << col << " ";
+                break;
+            }
+        }
+    }
+
+    cout << endl;
+    return 0;
+}
